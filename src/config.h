@@ -61,19 +61,19 @@
 #undef HAVE_UNISTD_H
 
 /* Name of package */
-#define PACKAGE "Doom"
+#define PACKAGE "DOOM"
 
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "Doom ASCII"
+#define PACKAGE_NAME "APE DOOM-ASCII"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Doom ASCII 0.1.1"
+#define PACKAGE_STRING "APE DOOM-ASCII 0.1.1"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "doom_ascii.tar"
+#define PACKAGE_TARNAME "ape_doom-ascii.tar"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""
@@ -82,7 +82,7 @@
 #define PACKAGE_VERSION 0.1
 
 /* Change this when you create your awesome forked version */
-#define PROGRAM_PREFIX "doom_ascii"
+#define PROGRAM_PREFIX "ape_doom-ascii"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
