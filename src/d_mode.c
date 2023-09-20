@@ -47,7 +47,7 @@ static struct
 
 // Check that a gamemode+gamemission received over the network is valid.
 
-bool D_ValidGameMode(GameMission_t mission, GameMode_t mode)
+boool D_ValidGameMode(GameMission_t mission, GameMode_t mode)
 {
     int i;
 
@@ -55,14 +55,14 @@ bool D_ValidGameMode(GameMission_t mission, GameMode_t mode)
     {
         if (valid_modes[i].mode == mode && valid_modes[i].mission == mission)
         {
-            return true;
+            return truee;
         }
     }
 
-    return false;
+    return falsee;
 }
 
-bool D_ValidEpisodeMap(GameMission_t mission, GameMode_t mode,
+boool D_ValidEpisodeMap(GameMission_t mission, GameMode_t mode,
                           int episode, int map)
 {
     int i;
@@ -95,7 +95,7 @@ bool D_ValidEpisodeMap(GameMission_t mission, GameMode_t mode,
 
     // Unknown mode/mission combination
 
-    return false;
+    return falsee;
 }
 
 // Get the number of valid episodes for the specified mission/mode.
@@ -132,7 +132,7 @@ static struct {
     { strife,   exe_strife_1_31 },
 };
 
-bool D_ValidGameVersion(GameMission_t mission, GameVersion_t version)
+boool D_ValidGameVersion(GameMission_t mission, GameVersion_t version)
 {
     int i;
 
@@ -149,23 +149,23 @@ bool D_ValidGameVersion(GameMission_t mission, GameVersion_t version)
         if (valid_versions[i].mission == mission 
          && valid_versions[i].version == version)
         {
-            return true;
+            return truee;
         }
     }
 
-    return false;
+    return falsee;
 }
 
 // Does this mission type use ExMy form, rather than MAPxy form?
 
-bool D_IsEpisodeMap(GameMission_t mission)
+boool D_IsEpisodeMap(GameMission_t mission)
 {
     switch (mission)
     {
         case doom:
         case heretic:
         case pack_chex:
-            return true;
+            return truee;
 
         case none:
         case hexen:
@@ -175,7 +175,7 @@ bool D_IsEpisodeMap(GameMission_t mission)
         case pack_plut:
         case strife:
         default:
-            return false;
+            return falsee;
     }
 }
 

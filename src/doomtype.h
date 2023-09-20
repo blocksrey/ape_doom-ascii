@@ -33,7 +33,6 @@
 
 #else
 
-#include <strings.h>
 
 #define STRNCASECMP strncasecmp
 
@@ -63,28 +62,16 @@
 // pre-standardisation version).  inttypes.h is also in the C99
 // standard and defined to include stdint.h, so include this.
 
-#include <inttypes.h>
 
-#ifdef __cplusplus
-
-// Use builtin bool type with C++.
-
-typedef bool bool;
-
-#else
 
 typedef enum
 {
-    false	= 0,
-    true	= 1,
-	undef	= 0xFFFFFFFF
-} bool;
-
-#endif
+    falsee	= 0,
+    truee	= 1,
+} boool;
 
 typedef uint8_t byte;
 
-#include <limits.h>
 
 #ifdef _WIN32
 

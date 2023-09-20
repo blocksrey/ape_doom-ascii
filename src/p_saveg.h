@@ -20,7 +20,7 @@
 #ifndef __P_SAVEG__
 #define __P_SAVEG__
 
-#include <stdio.h>
+
 
 // maximum size of a savegame description
 
@@ -36,12 +36,12 @@ char *P_SaveGameFile(int slot);
 
 // Savegame file header read/write functions
 
-bool P_ReadSaveGameHeader(void);
+boool P_ReadSaveGameHeader(void);
 void P_WriteSaveGameHeader(char *description);
 
 // Savegame end-of-file read/write functions
 
-bool P_ReadSaveGameEOF(void);
+boool P_ReadSaveGameEOF(void);
 void P_WriteSaveGameEOF(void);
 
 // Persistent storage/archiving.
@@ -56,7 +56,7 @@ void P_ArchiveSpecials (void);
 void P_UnArchiveSpecials (void);
 
 extern FILE *save_stream;
-extern bool savegame_error;
+extern boool savegame_error;
 
 
 #endif

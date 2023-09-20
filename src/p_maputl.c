@@ -22,7 +22,7 @@
 
 
 
-#include <stdlib.h>
+
 
 
 #include "m_bbox.h"
@@ -450,8 +450,8 @@ P_SetThingPosition (mobj_t* thing)
 // BLOCK MAP ITERATORS
 // For each line/thing in the given mapblock,
 // call the passed PIT_* function.
-// If the function returns false,
-// exit with false without checking anything else.
+// If the function returns falsee,
+// exit with falsee without checking anything else.
 //
 
 
@@ -463,11 +463,11 @@ P_SetThingPosition (mobj_t* thing)
 // to P_BlockLinesIterator, then make one or more calls
 // to it.
 //
-bool
+boool
 P_BlockLinesIterator
 ( int			x,
   int			y,
-  bool(*func)(line_t*) )
+  boool(*func)(line_t*) )
 {
     int			offset;
     short*		list;
@@ -478,7 +478,7 @@ P_BlockLinesIterator
 	|| x>=bmapwidth
 	|| y>=bmapheight)
     {
-	return true;
+	return truee;
     }
     
     offset = y*bmapwidth+x;
@@ -495,20 +495,20 @@ P_BlockLinesIterator
 	ld->validcount = validcount;
 		
 	if ( !func(ld) )
-	    return false;
+	    return falsee;
     }
-    return true;	// everything was checked
+    return truee;	// everything was checked
 }
 
 
 //
 // P_BlockThingsIterator
 //
-bool
+boool
 P_BlockThingsIterator
 ( int			x,
   int			y,
-  bool(*func)(mobj_t*) )
+  boool(*func)(mobj_t*) )
 {
     mobj_t*		mobj;
 	
@@ -517,7 +517,7 @@ P_BlockThingsIterator
 	 || x>=bmapwidth
 	 || y>=bmapheight)
     {
-	return true;
+	return truee;
     }
     
 
@@ -526,9 +526,9 @@ P_BlockThingsIterator
 	 mobj = mobj->bnext)
     {
 	if (!func( mobj ) )
-	    return false;
+	    return falsee;
     }
-    return true;
+    return truee;
 }
 
 
@@ -540,7 +540,7 @@ intercept_t	intercepts[MAXINTERCEPTS];
 intercept_t*	intercept_p;
 
 divline_t 	trace;
-bool 	earlyout;
+boool 	earlyout;
 int		ptflags;
 
 static void InterceptsOverrun(int num_intercepts, intercept_t *intercept);
@@ -553,9 +553,9 @@ static void InterceptsOverrun(int num_intercepts, intercept_t *intercept);
 //
 // A line is crossed if its endpoints
 // are on opposite sides of the trace.
-// Returns true if earlyout and a solid line hit.
+// Returns truee if earlyout and a solid line hit.
 //
-bool
+boool
 PIT_AddLineIntercepts (line_t* ld)
 {
     int			s1;
@@ -579,31 +579,31 @@ PIT_AddLineIntercepts (line_t* ld)
     }
     
     if (s1 == s2)
-	return true;	// line isn't crossed
+	return truee;	// line isn't crossed
     
     // hit the line
     P_MakeDivline (ld, &dl);
     frac = P_InterceptVector (&trace, &dl);
 
     if (frac < 0)
-	return true;	// behind source
+	return truee;	// behind source
 	
     // try to early out the check
     if (earlyout
 	&& frac < FRACUNIT
 	&& !ld->backsector)
     {
-	return false;	// stop checking
+	return falsee;	// stop checking
     }
     
 	
     intercept_p->frac = frac;
-    intercept_p->isaline = true;
+    intercept_p->isaline = truee;
     intercept_p->d.line = ld;
     InterceptsOverrun(intercept_p - intercepts, intercept_p);
     intercept_p++;
 
-    return true;	// continue
+    return truee;	// continue
 }
 
 
@@ -611,7 +611,7 @@ PIT_AddLineIntercepts (line_t* ld)
 //
 // PIT_AddThingIntercepts
 //
-bool PIT_AddThingIntercepts (mobj_t* thing)
+boool PIT_AddThingIntercepts (mobj_t* thing)
 {
     fixed_t		x1;
     fixed_t		y1;
@@ -621,7 +621,7 @@ bool PIT_AddThingIntercepts (mobj_t* thing)
     int			s1;
     int			s2;
     
-    bool		tracepositive;
+    boool		tracepositive;
 
     divline_t		dl;
     
@@ -651,7 +651,7 @@ bool PIT_AddThingIntercepts (mobj_t* thing)
     s2 = P_PointOnDivlineSide (x2, y2, &trace);
 
     if (s1 == s2)
-	return true;		// line isn't crossed
+	return truee;		// line isn't crossed
 	
     dl.x = x1;
     dl.y = y1;
@@ -661,24 +661,24 @@ bool PIT_AddThingIntercepts (mobj_t* thing)
     frac = P_InterceptVector (&trace, &dl);
 
     if (frac < 0)
-	return true;		// behind source
+	return truee;		// behind source
 
     intercept_p->frac = frac;
-    intercept_p->isaline = false;
+    intercept_p->isaline = falsee;
     intercept_p->d.thing = thing;
     InterceptsOverrun(intercept_p - intercepts, intercept_p);
     intercept_p++;
 
-    return true;		// keep going
+    return truee;		// keep going
 }
 
 
 //
 // P_TraverseIntercepts
-// Returns true if the traverser function returns true
+// Returns truee if the traverser function returns truee
 // for all lines.
 // 
-bool
+boool
 P_TraverseIntercepts
 ( traverser_t	func,
   fixed_t	maxfrac )
@@ -705,7 +705,7 @@ P_TraverseIntercepts
 	}
 	
 	if (dist > maxfrac)
-	    return true;	// checked everything in range		
+	    return truee;	// checked everything in range		
 
 #if 0  // UNUSED
     {
@@ -715,17 +715,17 @@ P_TraverseIntercepts
 	    if (scan->frac > maxfrac)
 		*in++ = *scan;
 	intercept_p = in;
-	return false;
+	return falsee;
     }
 #endif
 
         if ( !func (in) )
-	    return false;	// don't bother going farther
+	    return falsee;	// don't bother going farther
 
 	in->frac = INT_MAX;
     }
 	
-    return true;		// everything was traversed
+    return truee;		// everything was traversed
 }
 
 extern fixed_t bulletslope;
@@ -739,7 +739,7 @@ typedef struct
 {
     int len;
     void *addr;
-    bool int16_array;
+    boool int16_array;
 } intercepts_overrun_t;
 
 // Intercepts memory table.  This is where various variables are located
@@ -752,29 +752,29 @@ typedef struct
 
 static intercepts_overrun_t intercepts_overrun[] =
 {
-    {4,   NULL,                          false},
-    {4,   NULL, /* &earlyout, */         false},
-    {4,   NULL, /* &intercept_p, */      false},
-    {4,   &lowfloor,                     false},
-    {4,   &openbottom,                   false},
-    {4,   &opentop,                      false},
-    {4,   &openrange,                    false},
-    {4,   NULL,                          false},
-    {120, NULL, /* &activeplats, */      false},
-    {8,   NULL,                          false},
-    {4,   &bulletslope,                  false},
-    {4,   NULL, /* &swingx, */           false},
-    {4,   NULL, /* &swingy, */           false},
-    {4,   NULL,                          false},
-    {40,  &playerstarts,                 true},
-    {4,   NULL, /* &blocklinks, */       false},
-    {4,   &bmapwidth,                    false},
-    {4,   NULL, /* &blockmap, */         false},
-    {4,   &bmaporgx,                     false},
-    {4,   &bmaporgy,                     false},
-    {4,   NULL, /* &blockmaplump, */     false},
-    {4,   &bmapheight,                   false},
-    {0,   NULL,                          false},
+    {4,   NULL,                          falsee},
+    {4,   NULL, /* &earlyout, */         falsee},
+    {4,   NULL, /* &intercept_p, */      falsee},
+    {4,   &lowfloor,                     falsee},
+    {4,   &openbottom,                   falsee},
+    {4,   &opentop,                      falsee},
+    {4,   &openrange,                    falsee},
+    {4,   NULL,                          falsee},
+    {120, NULL, /* &activeplats, */      falsee},
+    {8,   NULL,                          falsee},
+    {4,   &bulletslope,                  falsee},
+    {4,   NULL, /* &swingx, */           falsee},
+    {4,   NULL, /* &swingy, */           falsee},
+    {4,   NULL,                          falsee},
+    {40,  &playerstarts,                 truee},
+    {4,   NULL, /* &blocklinks, */       falsee},
+    {4,   &bmapwidth,                    falsee},
+    {4,   NULL, /* &blockmap, */         falsee},
+    {4,   &bmaporgx,                     falsee},
+    {4,   &bmaporgy,                     falsee},
+    {4,   NULL, /* &blockmaplump, */     falsee},
+    {4,   &bmapheight,                   falsee},
+    {0,   NULL,                          falsee},
 };
 
 // Overwrite a specific memory location with a value.
@@ -854,17 +854,17 @@ static void InterceptsOverrun(int num_intercepts, intercept_t *intercept)
 // P_PathTraverse
 // Traces a line from x1,y1 to x2,y2,
 // calling the traverser function for each.
-// Returns true if the traverser function returns true
+// Returns truee if the traverser function returns truee
 // for all lines.
 //
-bool
+boool
 P_PathTraverse
 ( fixed_t		x1,
   fixed_t		y1,
   fixed_t		x2,
   fixed_t		y2,
   int			flags,
-  bool (*trav) (intercept_t *))
+  boool (*trav) (intercept_t *))
 {
     fixed_t	xt1;
     fixed_t	yt1;
@@ -966,13 +966,13 @@ P_PathTraverse
 	if (flags & PT_ADDLINES)
 	{
 	    if (!P_BlockLinesIterator (mapx, mapy,PIT_AddLineIntercepts))
-		return false;	// early out
+		return falsee;	// early out
 	}
 	
 	if (flags & PT_ADDTHINGS)
 	{
 	    if (!P_BlockThingsIterator (mapx, mapy,PIT_AddThingIntercepts))
-		return false;	// early out
+		return falsee;	// early out
 	}
 		
 	if (mapx == xt2

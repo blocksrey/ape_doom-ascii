@@ -17,8 +17,8 @@
 //
 
 
-#include <stdio.h>
-#include <ctype.h>
+
+
 
 // Functions.
 #include "deh_main.h"
@@ -45,9 +45,9 @@ typedef enum
 } finalestage_t;
 
 // ?
-//#include "doomstat.h"
-//#include "r_local.h"
-//#include "f_finale.h"
+#include "doomstat.h"
+#include "r_local.h"
+#include "f_finale.h"
 
 // Stage of animation:
 finalestage_t finalestage;
@@ -99,7 +99,7 @@ char*	finaleflat;
 
 void	F_StartCast (void);
 void	F_CastTicker (void);
-bool F_CastResponder (event_t *ev);
+boool F_CastResponder (event_t *ev);
 void	F_CastDrawer (void);
 
 //
@@ -111,16 +111,16 @@ void F_StartFinale (void)
 
     gameaction = ga_nothing;
     gamestate = GS_FINALE;
-    viewactive = false;
-    automapactive = false;
+    viewactive = falsee;
+    automapactive = falsee;
 
     if (logical_gamemission == doom)
     {
-        S_ChangeMusic(mus_victor, true);
+        S_ChangeMusic(mus_victor, truee);
     }
     else
     {
-        S_ChangeMusic(mus_read_m, true);
+        S_ChangeMusic(mus_read_m, truee);
     }
 
     // Find the right screen and set the text and background
@@ -157,12 +157,12 @@ void F_StartFinale (void)
 
 
 
-bool F_Responder (event_t *event)
+boool F_Responder (event_t *event)
 {
     if (finalestage == F_STAGE_CAST)
 	return F_CastResponder (event);
 	
-    return false;
+    return falsee;
 }
 
 
@@ -328,10 +328,10 @@ castinfo_t	castorder[] = {
 int		castnum;
 int		casttics;
 state_t*	caststate;
-bool		castdeath;
+boool		castdeath;
 int		castframes;
 int		castonmelee;
-bool		castattacking;
+boool		castattacking;
 
 
 //
@@ -343,12 +343,12 @@ void F_StartCast (void)
     castnum = 0;
     caststate = &states[mobjinfo[castorder[castnum].type].seestate];
     casttics = caststate->tics;
-    castdeath = false;
+    castdeath = falsee;
     finalestage = F_STAGE_CAST;
     castframes = 0;
     castonmelee = 0;
-    castattacking = false;
-    S_ChangeMusic(mus_evil, true);
+    castattacking = falsee;
+    S_ChangeMusic(mus_evil, truee);
 }
 
 
@@ -367,7 +367,7 @@ void F_CastTicker (void)
     {
 	// switch from deathstate to next monster
 	castnum++;
-	castdeath = false;
+	castdeath = falsee;
 	if (castorder[castnum].name == NULL)
 	    castnum = 0;
 	if (mobjinfo[castorder[castnum].type].seesound)
@@ -423,7 +423,7 @@ void F_CastTicker (void)
     if (castframes == 12)
     {
 	// go into attack frame
-	castattacking = true;
+	castattacking = truee;
 	if (castonmelee)
 	    caststate=&states[mobjinfo[castorder[castnum].type].meleestate];
 	else
@@ -446,7 +446,7 @@ void F_CastTicker (void)
 	    ||	caststate == &states[mobjinfo[castorder[castnum].type].seestate] )
 	{
 	  stopattack:
-	    castattacking = false;
+	    castattacking = falsee;
 	    castframes = 0;
 	    caststate = &states[mobjinfo[castorder[castnum].type].seestate];
 	}
@@ -462,24 +462,24 @@ void F_CastTicker (void)
 // F_CastResponder
 //
 
-bool F_CastResponder (event_t* ev)
+boool F_CastResponder (event_t* ev)
 {
     if (ev->type != ev_keydown)
-	return false;
+	return falsee;
 		
     if (castdeath)
-	return true;			// already in dying frames
+	return truee;			// already in dying frames
 		
     // go into death frame
-    castdeath = true;
+    castdeath = truee;
     caststate = &states[mobjinfo[castorder[castnum].type].deathstate];
     casttics = caststate->tics;
     castframes = 0;
-    castattacking = false;
+    castattacking = falsee;
     if (mobjinfo[castorder[castnum].type].deathsound)
 	S_StartSound (NULL, mobjinfo[castorder[castnum].type].deathsound);
 	
-    return true;
+    return truee;
 }
 
 
@@ -543,7 +543,7 @@ void F_CastDrawer (void)
     spritedef_t*	sprdef;
     spriteframe_t*	sprframe;
     int			lump;
-    bool		flip;
+    boool		flip;
     patch_t*		patch;
     
     // erase the entire screen to a background
@@ -555,7 +555,7 @@ void F_CastDrawer (void)
     sprdef = &sprites[caststate->sprite];
     sprframe = &sprdef->spriteframes[ caststate->frame & FF_FRAMEMASK];
     lump = sprframe->lump[0];
-    flip = (bool)sprframe->flip[0];
+    flip = (boool)sprframe->flip[0];
 			
     patch = W_CacheLumpNum (lump+firstspritelump, PU_CACHE);
     if (flip)

@@ -33,7 +33,7 @@ struct sfxinfo_struct
     // tag name, used for hexen.
     char *tagname;
     
-    // lump name.  If we are running with use_sfx_prefix=true, a
+    // lump name.  If we are running with use_sfx_prefix=truee, a
     // 'DS' (or 'DP' for PC speaker sounds) is prepended to this.
 
     char name[9];
@@ -110,9 +110,9 @@ typedef struct
     int num_sound_devices;
 
     // Initialise sound module
-    // Returns true if successfully initialised
+    // Returns truee if successfully initialised
 
-    bool (*Init)(bool use_sfx_prefix);
+    boool (*Init)(boool use_sfx_prefix);
 
     // Shutdown sound module
 
@@ -141,7 +141,7 @@ typedef struct
 
     // Query if a sound is playing on the given channel
 
-    bool (*SoundIsPlaying)(int channel);
+    boool (*SoundIsPlaying)(int channel);
 
     // Called on startup to precache sound effects (if necessary)
 
@@ -149,14 +149,14 @@ typedef struct
 
 } sound_module_t;
 
-void I_InitSound(bool use_sfx_prefix);
+void I_InitSound(boool use_sfx_prefix);
 void I_ShutdownSound(void);
 int I_GetSfxLumpNum(sfxinfo_t *sfxinfo);
 void I_UpdateSound(void);
 void I_UpdateSoundParams(int channel, int vol, int sep);
 int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep);
 void I_StopSound(int channel);
-bool I_SoundIsPlaying(int channel);
+boool I_SoundIsPlaying(int channel);
 void I_PrecacheSounds(sfxinfo_t *sounds, int num_sounds);
 
 // Interface for music modules
@@ -170,7 +170,7 @@ typedef struct
 
     // Initialise the music subsystem
 
-    bool (*Init)(void);
+    boool (*Init)(void);
 
     // Shutdown the music subsystem
 
@@ -199,7 +199,7 @@ typedef struct
 
     // Play the song
 
-    void (*PlaySong)(void *handle, bool looping);
+    void (*PlaySong)(void *handle, boool looping);
 
     // Stop playing the current song.
 
@@ -207,7 +207,7 @@ typedef struct
 
     // Query if music is playing.
 
-    bool (*MusicIsPlaying)(void);
+    boool (*MusicIsPlaying)(void);
 
     // Invoked periodically to poll.
 
@@ -221,9 +221,9 @@ void I_PauseSong(void);
 void I_ResumeSong(void);
 void *I_RegisterSong(void *data, int len);
 void I_UnRegisterSong(void *handle);
-void I_PlaySong(void *handle, bool looping);
+void I_PlaySong(void *handle, boool looping);
 void I_StopSong(void);
-bool I_MusicIsPlaying(void);
+boool I_MusicIsPlaying(void);
 
 extern int snd_sfxdevice;
 extern int snd_musicdevice;

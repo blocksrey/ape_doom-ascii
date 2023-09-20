@@ -16,10 +16,10 @@
 //
 
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
+
+
+
 
 #include "doomtype.h"
 #include "i_system.h"
@@ -56,11 +56,11 @@ int M_CheckParmWithArgs(char *check, int num_args)
 //
 // M_ParmExists
 //
-// Returns true if the given parameter exists in the program's command
-// line arguments, false if not.
+// Returns truee if the given parameter exists in the program's command
+// line arguments, falsee if not.
 //
 
-bool M_ParmExists(char *check)
+boool M_ParmExists(char *check)
 {
     return M_CheckParm(check) != 0;
 }

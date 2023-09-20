@@ -23,7 +23,7 @@
 
 
 
-bool	P_GivePower(player_t*, int);
+boool	P_GivePower(player_t*, int);
 
 
 

@@ -15,8 +15,8 @@
 //    Exit text-mode ENDOOM screen.
 //
 
-#include <stdio.h>
-#include <string.h>
+
+
 
 #include "config.h"
 #include "doomtype.h"
@@ -61,7 +61,7 @@ void I_Endoom(byte *endoom_data)
 
     // Wait for a keypress
 
-    while (true)
+    while (truee)
     {
         TXT_UpdateScreen();
 

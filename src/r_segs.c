@@ -21,8 +21,8 @@
 
 
 
-#include <stdio.h>
-#include <stdlib.h>
+
+
 
 #include "i_system.h"
 
@@ -36,13 +36,13 @@
 // OPTIMIZE: closed two sided lines as single sided
 
 // True if any of the segs textures might be visible.
-bool		segtextured;	
+boool		segtextured;	
 
 // False if the back side is the same plane.
-bool		markfloor;	
-bool		markceiling;
+boool		markfloor;	
+boool		markceiling;
 
-bool		maskedtexture;
+boool		maskedtexture;
 int		toptexture;
 int		bottomtexture;
 int		midtexture;
@@ -455,7 +455,7 @@ R_StoreWallRange
 	// single sided line
 	midtexture = texturetranslation[sidedef->midtexture];
 	// a single sided line is terminal, so it must mark ends
-	markfloor = markceiling = true;
+	markfloor = markceiling = truee;
 	if (linedef->flags & ML_DONTPEGBOTTOM)
 	{
 	    vtop = frontsector->floorheight +
@@ -535,12 +535,12 @@ R_StoreWallRange
 	    || backsector->floorpic != frontsector->floorpic
 	    || backsector->lightlevel != frontsector->lightlevel)
 	{
-	    markfloor = true;
+	    markfloor = truee;
 	}
 	else
 	{
 	    // same plane on both sides
-	    markfloor = false;
+	    markfloor = falsee;
 	}
 	
 			
@@ -548,19 +548,19 @@ R_StoreWallRange
 	    || backsector->ceilingpic != frontsector->ceilingpic
 	    || backsector->lightlevel != frontsector->lightlevel)
 	{
-	    markceiling = true;
+	    markceiling = truee;
 	}
 	else
 	{
 	    // same plane on both sides
-	    markceiling = false;
+	    markceiling = falsee;
 	}
 	
 	if (backsector->ceilingheight <= frontsector->floorheight
 	    || backsector->floorheight >= frontsector->ceilingheight)
 	{
 	    // closed door
-	    markceiling = markfloor = true;
+	    markceiling = markfloor = truee;
 	}
 	
 
@@ -604,7 +604,7 @@ R_StoreWallRange
 	if (sidedef->midtexture)
 	{
 	    // masked midtexture
-	    maskedtexture = true;
+	    maskedtexture = truee;
 	    ds_p->maskedtexturecol = maskedtexturecol = lastopening - rw_x;
 	    lastopening += rw_stopx - rw_x;
 	}
@@ -662,14 +662,14 @@ R_StoreWallRange
     if (frontsector->floorheight >= viewz)
     {
 	// above view plane
-	markfloor = false;
+	markfloor = falsee;
     }
     
     if (frontsector->ceilingheight <= viewz 
 	&& frontsector->ceilingpic != skyflatnum)
     {
 	// below view plane
-	markceiling = false;
+	markceiling = falsee;
     }
 
     

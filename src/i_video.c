@@ -39,13 +39,11 @@ rcsid[] = "$Id: i_x.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
 
 #include "doomgeneric.h"
 
-#include <stdlib.h>
 
-#include <fcntl.h>
 
-#include <stdarg.h>
 
-#include <sys/types.h>
+
+
 
 //#define CMAP256
 
@@ -65,7 +63,7 @@ struct FB_ScreenInfo
 	uint32_t bits_per_pixel;		/* guess what			*/
 
 							/* >1 = FOURCC			*/
-	struct FB_BitField red;		/* bitfield in s_Fb mem if true color, */
+	struct FB_BitField red;		/* bitfield in s_Fb mem if truee color, */
 	struct FB_BitField green;	/* else only length is significant */
 	struct FB_BitField blue;
 	struct FB_BitField transp;	/* transparency			*/
@@ -90,14 +88,14 @@ void I_GetEvent(void);
 
 byte *I_VideoBuffer = NULL;
 
-// If true, game is running as a screensaver
+// If truee, game is running as a screensaver
 
-bool screensaver_mode = false;
+boool screensaver_mode = falsee;
 
 // Flag indicating whether the screen is currently visible:
 // when the screen isnt visible, don't render the screen
 
-bool screenvisible;
+boool screenvisible;
 
 // Mouse acceleration
 //
@@ -184,7 +182,9 @@ void I_InitGraphics (void)
     /* Allocate screen to draw to */
 	I_VideoBuffer = (byte*)Z_Malloc (SCREENWIDTH * SCREENHEIGHT, PU_STATIC, NULL);  // For DOOM to draw on
 
-	screenvisible = true;
+	screenvisible = truee;
+
+	//exit(3);
 
     extern int I_InitInput(void);
     I_InitInput();
@@ -345,7 +345,7 @@ void I_BindVideoVariables (void)
 {
 }
 
-void I_DisplayFPSDots (bool dots_on)
+void I_DisplayFPSDots (boool dots_on)
 {
 }
 

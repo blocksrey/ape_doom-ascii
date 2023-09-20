@@ -8,38 +8,95 @@
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 // GNU General Public License for more details.
 //
 // DESCRIPTION:
-//     terminal-specific code
+//		terminal-specific code
 //
 
 #include "doomkeys.h"
 #include "i_system.h"
 #include "doomgeneric.h"
+#include "os.h"
 
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <string.h>
-#include <ctype.h>
 
-#if defined(_WIN32) || defined(WIN32)
-#define OS_WINDOWS
-#include <windows.h>
-#else
-#include <unistd.h>
-#include <termios.h>
-#include <sys/ioctl.h>
-#include <time.h>
-#endif
+
+typedef int64_t LONG_PTR; // this varies on 32/64 bit architectures
+#define INVALID_HANDLE_VALUE ((HANDLE)(LONG_PTR)-1)
+
+#define winError printf
+#define WINDOWS_CALL(cond_, format_) do {if (UUNLIKELY(cond_)) winError(format_);} while (0)
+
+#define CHAR uint8_t
+#define STD_INPUT_HANDLE ((DWORD)-10)
+#define STD_OUTPUT_HANDLE ((DWORD)-11)
+typedef int BOOL;
+typedef short SHORT;
+typedef uint16_t WCHAR;
+typedef unsigned int UINT;
+typedef unsigned long DWORD;
+typedef unsigned short WORD;
+typedef void *HANDLE;
+
+typedef struct _FOCUS_EVENT_RECORD {
+	BOOL bSetFocus;
+} FOCUS_EVENT_RECORD;
+
+typedef struct _MENU_EVENT_RECORD {
+	UINT dwCommandId;
+} MENU_EVENT_RECORD, *PMENU_EVENT_RECORD;
+
+typedef struct _COORD {
+	SHORT X;
+	SHORT Y;
+} COORD, *PCOORD;
+
+typedef struct _WINDOW_BUFFER_SIZE_RECORD {
+	COORD dwSize;
+} WINDOW_BUFFER_SIZE_RECORD;
+
+typedef struct _MOUSE_EVENT_RECORD {
+	COORD dwMousePosition;
+	DWORD dwButtonState;
+	DWORD dwControlKeyState;
+	DWORD dwEventFlags;
+} MOUSE_EVENT_RECORD;
+
+typedef struct _KEY_EVENT_RECORD {
+	BOOL	bKeyDown;
+	WORD	wRepeatCount;
+	WORD	wVirtualKeyCode;
+	WORD	wVirtualScanCode;
+	union {
+		WCHAR UnicodeChar;
+		CHAR	AsciiChar;
+	} uChar;
+	DWORD dwControlKeyState;
+} KEY_EVENT_RECORD;
+
+
+typedef struct _INPUT_RECORD {
+	WORD	EventType;
+	union {
+		KEY_EVENT_RECORD					KeyEvent;
+		MOUSE_EVENT_RECORD				MouseEvent;
+		WINDOW_BUFFER_SIZE_RECORD WindowBufferSizeEvent;
+		MENU_EVENT_RECORD				MenuEvent;
+		FOCUS_EVENT_RECORD				FocusEvent;
+	} Event;
+} INPUT_RECORD;
+
+#define ENABLE_LINE_INPUT 0x0002
+#define ENABLE_ECHO_INPUT 0x0004
+#define KEY_EVENT 0x0001
+#define ENABLE_MOUSE_INPUT 0x0010
+#define ENABLE_WINDOW_INPUT 0x0008
+#define ENABLE_QUICK_EDIT_MODE 0x0040
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
 
 #ifdef OS_WINDOWS
 #define CLK 0
-
-#define WINDOWS_CALL(cond_, format_) do {if (UNLIKELY(cond_)) winError(format_);} while (0)
 
 void winError(char* format)
 {
@@ -60,37 +117,37 @@ void winError(char* format)
 /* Modified from https://stackoverflow.com/a/31335254 */
 struct timespec { long tv_sec; long tv_nsec; };
 int clock_gettime(int p, struct timespec *spec)
-{  (void)p; __int64 wintime; GetSystemTimeAsFileTime((FILETIME*)&wintime);
-   wintime      -=116444736000000000ll;
-   spec->tv_sec  =wintime / 10000000ll;
-   spec->tv_nsec =wintime % 10000000ll *100;
-   return 0;
+{	(void)p; __int64 wintime; GetSystemTimeAsFileTime((FILETIME*)&wintime);
+	wintime			-=116444736000000000ll;
+	spec->tv_sec	=wintime/10000000ll;
+	spec->tv_nsec =wintime % 10000000ll *100;
+	return 0;
 }
 
 #else
 #define CLK CLOCK_REALTIME
 #endif
 
-#define UNLIKELY(x_) __builtin_expect((x_),0)
-#define CALL(stmt_, format_) do {if (UNLIKELY(stmt_)) I_Error(format_, errno);} while (0)
+#define UUNLIKELY(x_) __builtin_expect((x_),0)
+#define CALL(stmt_, format_) do {if (UUNLIKELY(stmt_)) I_Error(format_, errno);} while (0)
 #define CALL_STDOUT(stmt_, format_) CALL((stmt_) == EOF, format_)
 
 #define BYTE_TO_TEXT(buf_, byte_) do {\
-	*(buf_)++ = '0' + (byte_) / 100u;\
-	*(buf_)++ = '0' + (byte_) / 10u % 10u;\
+	*(buf_)++ = '0' + (byte_)/100u;\
+	*(buf_)++ = '0' + (byte_)/10u % 10u;\
 	*(buf_)++ = '0' + (byte_) % 10u;\
 } while (0)
 
 const char grad[] = " .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
 #define GRAD_LEN 70u
 #define INPUT_BUFFER_LEN 16u
-#define EVENT_BUFFER_LEN (INPUT_BUFFER_LEN * 2u - 1u)
+#define EVENT_BUFFER_LEN (INPUT_BUFFER_LEN*2u - 1u)
 
 struct color_t {
-    uint32_t b:8;
-    uint32_t g:8;
-    uint32_t r:8;
-    uint32_t a:8;
+	uint32_t b:8;
+	uint32_t g:8;
+	uint32_t r:8;
+	uint32_t a:8;
 };
 
 char *output_buffer;
@@ -103,65 +160,62 @@ uint16_t *event_buf_loc;
 
 void DG_Init()
 {
-#ifdef OS_WINDOWS
-	const HANDLE hOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-	WINDOWS_CALL(hOutputHandle == INVALID_HANDLE_VALUE, "DG_Init: %s");
-	DWORD mode;
-	WINDOWS_CALL(!GetConsoleMode(hOutputHandle, &mode), "DG_Init: %s");
-	mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-	WINDOWS_CALL(!SetConsoleMode(hOutputHandle, mode), "DG_Init: %s");
+	switch (the_os) {
+		case OSYS_WINDOWS: {
+			const HANDLE hOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+			WINDOWS_CALL(hOutputHandle == INVALID_HANDLE_VALUE, "DG_Init: %s");
+			DWORD mode;
+			WINDOWS_CALL(!GetConsoleMode(hOutputHandle, &mode), "DG_Init: %s");
+			mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+			WINDOWS_CALL(!SetConsoleMode(hOutputHandle, mode), "DG_Init: %s");
 
-	const HANDLE hInputHandle = GetStdHandle(STD_INPUT_HANDLE);
-	WINDOWS_CALL(hInputHandle == INVALID_HANDLE_VALUE, "DG_Init: %s");
-	WINDOWS_CALL(!GetConsoleMode(hInputHandle, &mode), "DG_Init: %s");
-	mode &= ~(ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT | ENABLE_QUICK_EDIT_MODE);
-	WINDOWS_CALL(!SetConsoleMode(hInputHandle, mode), "DG_Init: %s");
-#endif
+			const HANDLE hInputHandle = GetStdHandle(STD_INPUT_HANDLE);
+			WINDOWS_CALL(hInputHandle == INVALID_HANDLE_VALUE, "DG_Init: %s");
+			WINDOWS_CALL(!GetConsoleMode(hInputHandle, &mode), "DG_Init: %s");
+			mode &= ~(ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT | ENABLE_QUICK_EDIT_MODE);
+			WINDOWS_CALL(!SetConsoleMode(hInputHandle, mode), "DG_Init: %s");
+
+			break;
+		}
+	}
+
 	/* Longest SGR code: \033[38;2;RRR;GGG;BBBm (length 19)
-	 * Maximum 21 bytes per pixel: SGR + 2 x char
-	 * 1 Newline character per line
-	 * SGR clear code: \033[0m (length 4)
-	 */
-	 output_buffer_size = 21u * DOOMGENERIC_RESX * DOOMGENERIC_RESY + DOOMGENERIC_RESY + 4u;
-	 output_buffer = malloc(output_buffer_size);
+	* Maximum 21 bytes per pixel: SGR + 2 x char
+	* 1 Newline character per line
+	* SGR clear code: \033[0m (length 4)
+	*/
+	output_buffer_size = 21u*DOOMGENERIC_RESX*DOOMGENERIC_RESY + DOOMGENERIC_RESY + 4u;
+	output_buffer = malloc(output_buffer_size);
 
-	 clock_gettime(CLK, &ts_init);
+	clock_gettime(CLK, &ts_init);
 
-	 memset(input_buffer, '\0', INPUT_BUFFER_LEN);
+	memset(input_buffer, '\0', INPUT_BUFFER_LEN);
 }
 
 void DG_DrawFrame()
 {
-	/* Clear screen if first frame */
-	static bool first_frame = true;
-	if (first_frame) {
-		first_frame = false;
-		fputs("\033[1;1H\033[2J", stdout);
-	}
-
 	/* fill output buffer */
 	uint32_t color = 0xFFFFFF00;
-	unsigned row, col;
+	unsigned trans_pix_ind;
 	struct color_t *pixel = (struct color_t *)DG_ScreenBuffer;
 	char *buf = output_buffer;
 
-	for (row = 0; row < DOOMGENERIC_RESY; row++) {
-		for (col = 0; col < DOOMGENERIC_RESX; col++) {
-			if ((color ^ *(uint32_t*)pixel) & 0x00FFFFFF) {
-				*buf++ = '\033'; *buf++ = '[';
-				*buf++ = '3'; *buf++ = '8';
-				*buf++ = ';'; *buf++ = '2';
-				*buf++ = ';'; BYTE_TO_TEXT(buf, pixel->r);
-				*buf++ = ';'; BYTE_TO_TEXT(buf, pixel->g);
-				*buf++ = ';'; BYTE_TO_TEXT(buf, pixel->b);
-				*buf++ = 'm';
-				color = *(uint32_t*)pixel;
-			}
-			char v_char = grad[(pixel->r + pixel->g + pixel->b) * GRAD_LEN / 766u];
-			*buf++ = v_char; *buf++ = v_char;
-			pixel++;
+	for (trans_pix_ind = DOOMGENERIC_RESX*DOOMGENERIC_RESY; trans_pix_ind--;) {
+		if ((color ^ *(uint32_t*)pixel)&0x00FFFFFF) {
+			*buf++ = '\033'; *buf++ = '[';
+			*buf++ = '3'; *buf++ = '8';
+			*buf++ = ';'; *buf++ = '2';
+			*buf++ = ';'; BYTE_TO_TEXT(buf, pixel->r);
+			*buf++ = ';'; BYTE_TO_TEXT(buf, pixel->g);
+			*buf++ = ';'; BYTE_TO_TEXT(buf, pixel->b);
+			*buf++ = 'm';
+			color = *(uint32_t*)pixel;
 		}
-		*buf++ = '\n';
+		char v_char = grad[(pixel->r + pixel->g + pixel->b)*GRAD_LEN/766u];
+		*buf++ = v_char; *buf++ = v_char;
+		++pixel;
+
+		if (trans_pix_ind%DOOMGENERIC_RESX == 0) *buf++ = '\n';
 	}
 	*buf++ = '\033'; *buf++ = '[';
 	*buf++ = '0';
@@ -179,15 +233,11 @@ void DG_DrawFrame()
 
 void DG_SleepMs(uint32_t ms)
 {
-	#ifdef OS_WINDOWS
-		Sleep(ms);
-	#else
-		struct timespec ts = (struct timespec) {
-			.tv_sec = ms / 1000,
-			.tv_nsec = (ms % 1000ul) * 1000000,
-		};
-		nanosleep(&ts, NULL);
-	#endif
+	struct timespec ts = (struct timespec) {
+		.tv_sec = ms/1000,
+		.tv_nsec = (ms % 1000ul)*1000000,
+	};
+	nanosleep(&ts, NULL);
 }
 
 uint32_t DG_GetTicksMs()
@@ -195,7 +245,7 @@ uint32_t DG_GetTicksMs()
 	struct timespec ts;
 	clock_gettime(CLK, &ts);
 
-	return (ts.tv_sec - ts_init.tv_sec) * 1000 + (ts.tv_nsec - ts_init.tv_nsec) / 1000000;
+	return (ts.tv_sec - ts_init.tv_sec)*1000 + (ts.tv_nsec - ts_init.tv_nsec)/1000000;
 }
 
 char convertToDoomKey(char **buf)
@@ -242,57 +292,67 @@ void DG_ReadInput(void)
 	memcpy(prev_input_buffer, input_buffer, INPUT_BUFFER_LEN);
 	memset(raw_input_buffer, '\0', INPUT_BUFFER_LEN);
 	memset(input_buffer, '\0', INPUT_BUFFER_LEN);
-	memset(event_buffer, '\0', 2u * EVENT_BUFFER_LEN);
+	memset(event_buffer, '\0', 2u*EVENT_BUFFER_LEN);
 	event_buf_loc = event_buffer;
-#if defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__))
-	struct termios oldt, newt;
 
-	/* Disable canonical mode */
-	CALL(tcgetattr(STDIN_FILENO, &oldt), "DG_DrawFrame: tcgetattr error %d");
-	newt = oldt;
-	newt.c_lflag &= ~(ICANON);
-	newt.c_cc[VMIN] = 0;
-	newt.c_cc[VTIME] = 0;
-	CALL(tcsetattr(STDIN_FILENO, TCSANOW, &newt), "DG_DrawFrame: tcsetattr error %d");
 
-	CALL(read(2, raw_input_buffer, INPUT_BUFFER_LEN - 1u) < 0, "DG_DrawFrame: read error %d");
+	switch (the_os) {
+		case OSYS_WINDOWS: {
+			const HANDLE hInputHandle = GetStdHandle(STD_INPUT_HANDLE);
+			WINDOWS_CALL(hInputHandle == INVALID_HANDLE_VALUE, "DG_ReadInput: %s");
 
-	CALL(tcsetattr(STDIN_FILENO, TCSANOW, &oldt), "DG_DrawFrame: tcsetattr error %d");
+			/* Disable canonical mode */
+			DWORD old_mode, new_mode;
+			WINDOWS_CALL(!GetConsoleMode(hInputHandle, &old_mode), "DG_ReadInput: %s");
+			new_mode = old_mode;
+			new_mode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
+			WINDOWS_CALL(!SetConsoleMode(hInputHandle, new_mode), "DG_ReadInput: %s");
 
-	/* Flush input buffer to prevent read of previous unread input */
-	CALL(tcflush(STDIN_FILENO, TCIFLUSH), "DG_DrawFrame: tcflush error %d");
-#else /* defined(OS_WINDOWS) */
-	const HANDLE hInputHandle = GetStdHandle(STD_INPUT_HANDLE);
-	WINDOWS_CALL(hInputHandle == INVALID_HANDLE_VALUE, "DG_ReadInput: %s");
+			DWORD event_cnt;
+			WINDOWS_CALL(!GetNumberOfConsoleInputEvents(hInputHandle, &event_cnt), "DG_ReadInput: %s");
 
-	/* Disable canonical mode */
-	DWORD old_mode, new_mode;
-	WINDOWS_CALL(!GetConsoleMode(hInputHandle, &old_mode), "DG_ReadInput: %s");
-	new_mode = old_mode;
-	new_mode &= ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT);
-	WINDOWS_CALL(!SetConsoleMode(hInputHandle, new_mode), "DG_ReadInput: %s");
+			/* ReadConsole is blocking so must manually process events */
+			int input_count = 0;
+			if (event_cnt) {
+				INPUT_RECORD input_records[32];
+				WINDOWS_CALL(!ReadConsoleInput(hInputHandle, input_records, 32, &event_cnt), "DG_ReadInput: %s");
 
-	DWORD event_cnt;
-	WINDOWS_CALL(!GetNumberOfConsoleInputEvents(hInputHandle, &event_cnt), "DG_ReadInput: %s");
-
-	/* ReadConsole is blocking so must manually process events */
-	int input_count = 0;
-	if (event_cnt) {
-		INPUT_RECORD input_records[32];
-		WINDOWS_CALL(!ReadConsoleInput(hInputHandle, input_records, 32, &event_cnt), "DG_ReadInput: %s");
-
-		DWORD i;
-		for (i = 0; i < event_cnt; i++) {
-			if (input_records[i].Event.KeyEvent.bKeyDown && input_records[i].EventType == KEY_EVENT) {
-				raw_input_buffer[input_count++] = input_records[i].Event.KeyEvent.uChar.AsciiChar;
-				if (input_count == INPUT_BUFFER_LEN - 1u)
-					break;
+				DWORD i;
+				for (i = 0; i < event_cnt; i++) {
+					if (input_records[i].Event.KeyEvent.bKeyDown && input_records[i].EventType == KEY_EVENT) {
+						raw_input_buffer[input_count++] = input_records[i].Event.KeyEvent.uChar.AsciiChar;
+						if (input_count == INPUT_BUFFER_LEN - 1u)
+							break;
+					}
+				}
 			}
+
+			WINDOWS_CALL(!SetConsoleMode(hInputHandle, old_mode), "DG_ReadInput: %s");
+
+			break;
+		}
+		default: {
+			struct termios oldt, newt;
+
+			/* Disable canonical mode */
+			CALL(tcgetattr(STDIN_FILENO, &oldt), "DG_DrawFrame: tcgetattr error %d");
+			newt = oldt;
+			newt.c_lflag &= ~(ICANON);
+			newt.c_cc[VMIN] = 0;
+			newt.c_cc[VTIME] = 0;
+			CALL(tcsetattr(STDIN_FILENO, TCSANOW, &newt), "DG_DrawFrame: tcsetattr error %d");
+
+			CALL(read(2, raw_input_buffer, INPUT_BUFFER_LEN - 1u) < 0, "DG_DrawFrame: read error %d");
+
+			CALL(tcsetattr(STDIN_FILENO, TCSANOW, &oldt), "DG_DrawFrame: tcsetattr error %d");
+
+			/* Flush input buffer to prevent read of previous unread input */
+			CALL(tcflush(STDIN_FILENO, TCIFLUSH), "DG_DrawFrame: tcflush error %d");
+
+			break;
 		}
 	}
 
-	WINDOWS_CALL(!SetConsoleMode(hInputHandle, old_mode), "DG_ReadInput: %s");
-#endif
 	/* create input buffer */
 	char *raw_input_buf_loc = raw_input_buffer;
 	char *input_buf_loc = input_buffer;
@@ -303,10 +363,10 @@ void DG_ReadInput(void)
 	int i, j;
 	for (i = 0; input_buffer[i]; i++) {
 		/* skip duplicates */
-        for (j = i + 1; input_buffer[j]; j++) {
-            if (input_buffer[i] == input_buffer[j])
+		for (j = i + 1; input_buffer[j]; j++) {
+			if (input_buffer[i] == input_buffer[j])
 				goto LBL_CONTINUE_1;
-        }
+		}
 
 		/* pressed events */
 		for (j = 0; prev_input_buffer[j]; j++) {
@@ -316,7 +376,7 @@ void DG_ReadInput(void)
 		*event_buf_loc++ = 0x0100 | input_buffer[i];
 
 		LBL_CONTINUE_1:;
-    }
+	}
 
 	/* depressed events */
 	for (i = 0; prev_input_buffer[i]; i++) {
@@ -324,7 +384,7 @@ void DG_ReadInput(void)
 			if (prev_input_buffer[i] == input_buffer[j])
 				goto LBL_CONTINUE_2;
 		}
-		*event_buf_loc++ = 0xFF & prev_input_buffer[i];
+		*event_buf_loc++ = 0xFF&prev_input_buffer[i];
 
 		LBL_CONTINUE_2:;
 	}
@@ -337,8 +397,8 @@ int DG_GetKey(int* pressed, unsigned char* doomKey)
 	if (!*event_buf_loc)
 		return 0;
 
-    *pressed = *event_buf_loc >> 8;
-    *doomKey = *event_buf_loc & 0xFF;
+	*pressed = *event_buf_loc >> 8;
+	*doomKey = *event_buf_loc&0xFF;
 	event_buf_loc++;
 	return 1;
 }

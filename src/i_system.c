@@ -17,17 +17,17 @@
 
 
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
-#include <stdarg.h>
+
+
+
+
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+ 
 #else
-#include <unistd.h>
+
 #endif
 
 #ifdef ORIGCODE
@@ -64,13 +64,13 @@ typedef struct atexit_listentry_s atexit_listentry_t;
 struct atexit_listentry_s
 {
     atexit_func_t func;
-    bool run_on_error;
+    boool run_on_error;
     atexit_listentry_t *next;
 };
 
 static atexit_listentry_t *exit_funcs = NULL;
 
-void I_AtExit(atexit_func_t func, bool run_on_error)
+void I_AtExit(atexit_func_t func, boool run_on_error)
 {
     atexit_listentry_t *entry;
 
@@ -204,10 +204,10 @@ void I_PrintStartupBanner(char *gamedescription)
 // 
 // I_ConsoleStdout
 //
-// Returns true if stdout is a real console, false if it is a file
+// Returns truee if stdout is a real console, falsee if it is a file
 //
 
-bool I_ConsoleStdout(void)
+boool I_ConsoleStdout(void)
 {
 #ifdef _WIN32
     // SDL "helpfully" always redirects stdout to a file.
@@ -354,14 +354,14 @@ static int ZenityErrorBox(char *message)
 // I_Error
 //
 
-static bool already_quitting = false;
+static boool already_quitting = falsee;
 
 void I_Error (char *error, ...)
 {
     char msgbuf[512];
     va_list argptr;
     atexit_listentry_t *entry;
-    bool exit_gui_popup;
+    boool exit_gui_popup;
 
     if (already_quitting)
     {
@@ -372,7 +372,7 @@ void I_Error (char *error, ...)
     }
     else
     {
-        already_quitting = true;
+        already_quitting = truee;
     }
 
     // Message first.
@@ -460,7 +460,7 @@ void I_Error (char *error, ...)
 
     exit(-1);
 #else
-    while (true)
+    while (truee)
     {
     }
 #endif
@@ -496,15 +496,15 @@ static unsigned char mem_dump_custom[DOS_MEM_DUMP_SIZE];
 
 static const unsigned char *dos_mem_dump = mem_dump_dos622;
 
-bool I_GetMemoryValue(unsigned int offset, void *value, int size)
+boool I_GetMemoryValue(unsigned int offset, void *value, int size)
 {
-    static bool firsttime = true;
+    static boool firsttime = truee;
 
     if (firsttime)
     {
         int p, i, val;
 
-        firsttime = false;
+        firsttime = falsee;
         i = 0;
 
         //!
@@ -556,19 +556,19 @@ bool I_GetMemoryValue(unsigned int offset, void *value, int size)
     {
     case 1:
         *((unsigned char *) value) = dos_mem_dump[offset];
-        return true;
+        return truee;
     case 2:
         *((unsigned short *) value) = dos_mem_dump[offset]
                                     | (dos_mem_dump[offset + 1] << 8);
-        return true;
+        return truee;
     case 4:
         *((unsigned int *) value) = dos_mem_dump[offset]
                                   | (dos_mem_dump[offset + 1] << 8)
                                   | (dos_mem_dump[offset + 2] << 16)
                                   | (dos_mem_dump[offset + 3] << 24);
-        return true;
+        return truee;
     }
 
-    return false;
+    return falsee;
 }
 

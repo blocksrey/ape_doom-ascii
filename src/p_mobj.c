@@ -16,7 +16,7 @@
 //	Moving object handling. Spawn functions.
 //
 
-#include <stdio.h>
+
 
 #include "i_system.h"
 #include "z_zone.h"
@@ -40,11 +40,11 @@ void P_SpawnMapThing (mapthing_t*	mthing);
 
 //
 // P_SetMobjState
-// Returns true if the mobj is still present.
+// Returns truee if the mobj is still present.
 //
 int test;
 
-bool
+boool
 P_SetMobjState
 ( mobj_t*	mobj,
   statenum_t	state )
@@ -57,7 +57,7 @@ P_SetMobjState
 	{
 	    mobj->state = (state_t *) S_NULL;
 	    P_RemoveMobj (mobj);
-	    return false;
+	    return falsee;
 	}
 
 	st = &states[state];
@@ -74,7 +74,7 @@ P_SetMobjState
 	state = st->nextstate;
     } while (!mobj->tics);
 				
-    return true;
+    return truee;
 }
 
 
@@ -719,7 +719,7 @@ void P_SpawnPlayer (mapthing_t* mthing)
     // give all cards in death match mode
     if (deathmatch)
 	for (i=0 ; i<NUMCARDS ; i++)
-	    p->cards[i] = true;
+	    p->cards[i] = truee;
 			
     if (mthing->type-1 == consoleplayer)
     {

@@ -17,8 +17,8 @@
 //
 
 
-#include <stdio.h>
-#include <stdlib.h>
+
+
 
 #include "dstrings.h"
 #include "deh_main.h"
@@ -38,7 +38,7 @@
 
 FILE *save_stream;
 int savegamelength;
-bool savegame_error;
+boool savegame_error;
 
 // Get the filename of a temporary file to write the savegame to.  After
 // the file has been successfully saved, it will be renamed to the 
@@ -89,7 +89,7 @@ static byte saveg_read8(void)
             fprintf(stderr, "saveg_read8: Unexpected end of file while "
                             "reading save game\n");
 
-            savegame_error = true;
+            savegame_error = truee;
         }
     }
 
@@ -104,7 +104,7 @@ static void saveg_write8(byte value)
         {
             fprintf(stderr, "saveg_write8: Error while writing save game\n");
 
-            savegame_error = true;
+            savegame_error = truee;
         }
     }
 }
@@ -678,13 +678,13 @@ static void saveg_read_player_t(player_t *str)
         str->powers[i] = saveg_read32();
     }
 
-    // bool cards[NUMCARDS];
+    // boool cards[NUMCARDS];
     for (i=0; i<NUMCARDS; ++i)
     {
         str->cards[i] = saveg_read32();
     }
 
-    // bool backpack;
+    // boool backpack;
     str->backpack = saveg_read32();
 
     // int frags[MAXPLAYERS];
@@ -699,7 +699,7 @@ static void saveg_read_player_t(player_t *str)
     // weapontype_t pendingweapon;
     str->pendingweapon = saveg_read_enum();
 
-    // bool weaponowned[NUMWEAPONS];
+    // boool weaponowned[NUMWEAPONS];
     for (i=0; i<NUMWEAPONS; ++i)
     {
         str->weaponowned[i] = saveg_read32();
@@ -765,7 +765,7 @@ static void saveg_read_player_t(player_t *str)
         saveg_read_pspdef_t(&str->psprites[i]);
     }
 
-    // bool didsecret;
+    // boool didsecret;
     str->didsecret = saveg_read32();
 }
 
@@ -809,13 +809,13 @@ static void saveg_write_player_t(player_t *str)
         saveg_write32(str->powers[i]);
     }
 
-    // bool cards[NUMCARDS];
+    // boool cards[NUMCARDS];
     for (i=0; i<NUMCARDS; ++i)
     {
         saveg_write32(str->cards[i]);
     }
 
-    // bool backpack;
+    // boool backpack;
     saveg_write32(str->backpack);
 
     // int frags[MAXPLAYERS];
@@ -830,7 +830,7 @@ static void saveg_write_player_t(player_t *str)
     // weapontype_t pendingweapon;
     saveg_write_enum(str->pendingweapon);
 
-    // bool weaponowned[NUMWEAPONS];
+    // boool weaponowned[NUMWEAPONS];
     for (i=0; i<NUMWEAPONS; ++i)
     {
         saveg_write32(str->weaponowned[i]);
@@ -896,7 +896,7 @@ static void saveg_write_player_t(player_t *str)
         saveg_write_pspdef_t(&str->psprites[i]);
     }
 
-    // bool didsecret;
+    // boool didsecret;
     saveg_write32(str->didsecret);
 }
 
@@ -928,7 +928,7 @@ static void saveg_read_ceiling_t(ceiling_t *str)
     // fixed_t speed;
     str->speed = saveg_read32();
 
-    // bool crush;
+    // boool crush;
     str->crush = saveg_read32();
 
     // int direction;
@@ -961,7 +961,7 @@ static void saveg_write_ceiling_t(ceiling_t *str)
     // fixed_t speed;
     saveg_write32(str->speed);
 
-    // bool crush;
+    // boool crush;
     saveg_write32(str->crush);
 
     // int direction;
@@ -1049,7 +1049,7 @@ static void saveg_read_floormove_t(floormove_t *str)
     // floor_e type;
     str->type = saveg_read_enum();
 
-    // bool crush;
+    // boool crush;
     str->crush = saveg_read32();
 
     // sector_t* sector;
@@ -1080,7 +1080,7 @@ static void saveg_write_floormove_t(floormove_t *str)
     // floor_e type;
     saveg_write_enum(str->type);
 
-    // bool crush;
+    // boool crush;
     saveg_write32(str->crush);
 
     // sector_t* sector;
@@ -1138,7 +1138,7 @@ static void saveg_read_plat_t(plat_t *str)
     // plat_e oldstatus;
     str->oldstatus = saveg_read_enum();
 
-    // bool crush;
+    // boool crush;
     str->crush = saveg_read32();
 
     // int tag;
@@ -1177,7 +1177,7 @@ static void saveg_write_plat_t(plat_t *str)
     // plat_e oldstatus;
     saveg_write_enum(str->oldstatus);
 
-    // bool crush;
+    // boool crush;
     saveg_write32(str->crush);
 
     // int tag;
@@ -1376,7 +1376,7 @@ void P_WriteSaveGameHeader(char *description)
 // Read the header for a savegame
 //
 
-bool P_ReadSaveGameHeader(void)
+boool P_ReadSaveGameHeader(void)
 {
     int	 i; 
     byte a, b, c; 
@@ -1394,7 +1394,7 @@ bool P_ReadSaveGameHeader(void)
     memset(vcheck, 0, sizeof(vcheck));
     M_snprintf(vcheck, sizeof(vcheck), "version %i", G_VanillaVersionCode());
     if (strcmp(read_vcheck, vcheck) != 0)
-	return false;				// bad version 
+	return falsee;				// bad version 
 
     gameskill = saveg_read8();
     gameepisode = saveg_read8();
@@ -1409,14 +1409,14 @@ bool P_ReadSaveGameHeader(void)
     c = saveg_read8();
     leveltime = (a<<16) + (b<<8) + c; 
 
-    return true;
+    return truee;
 }
 
 //
-// Read the end of file marker.  Returns true if read successfully.
+// Read the end of file marker.  Returns truee if read successfully.
 // 
 
-bool P_ReadSaveGameEOF(void)
+boool P_ReadSaveGameEOF(void)
 {
     int value;
 

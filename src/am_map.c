@@ -17,7 +17,7 @@
 //
 
 
-#include <stdio.h>
+
 
 #include "deh_main.h"
 
@@ -59,12 +59,12 @@
 #define BROWNRANGE	16
 #define YELLOWS		(256-32+7)
 #define YELLOWRANGE	1
-#define BLACK		0
-#define WHITE		(256-47)
+#define BBLACK		0
+#define WWHITE		(256-47)
 
 // Automap colors
-#define BACKGROUND	BLACK
-#define YOURCOLORS	WHITE
+#define BACKGROUND	BBLACK
+#define YOURCOLORS	WWHITE
 #define YOURRANGE	0
 #define WALLCOLORS	REDS
 #define WALLRANGE	REDRANGE
@@ -197,7 +197,7 @@ static int 	grid = 0;
 
 static int 	leveljuststarted = 1; 	// kluge until AM_LevelInit() is called
 
-bool    	automapactive = false;
+boool    	automapactive = falsee;
 static int 	finit_width = SCREENWIDTH;
 static int 	finit_height = SCREENHEIGHT - 32;
 
@@ -265,7 +265,7 @@ static int followplayer = 1; // specifies whether to follow the player around
 
 cheatseq_t cheat_amap = CHEAT("iddt", 0);
 
-static bool stopped = true;
+static boool stopped = truee;
 
 // Calculates the slope and slope according to the x-axis of a line
 // segment in map coordinates (with the upright y-axis n' all) so
@@ -426,7 +426,7 @@ void AM_initVariables(void)
     int pnum;
     static event_t st_notify = { ev_keyup, AM_MSGENTERED, 0, 0 };
 
-    automapactive = true;
+    automapactive = truee;
     fb = I_VideoBuffer;
 
     f_oldloc.x = INT_MAX;
@@ -543,9 +543,9 @@ void AM_Stop (void)
     static event_t st_notify = { 0, ev_keyup, AM_MSGEXITED, 0 };
 
     AM_unloadPics();
-    automapactive = false;
+    automapactive = falsee;
     ST_Responder(&st_notify);
-    stopped = true;
+    stopped = truee;
 }
 
 //
@@ -556,7 +556,7 @@ void AM_Start (void)
     static int lastlevel = -1, lastepisode = -1;
 
     if (!stopped) AM_Stop();
-    stopped = false;
+    stopped = falsee;
     if (lastlevel != gamemap || lastepisode != gameepisode)
     {
 	AM_LevelInit();
@@ -591,7 +591,7 @@ void AM_maxOutWindowScale(void)
 //
 // Handle events (user inputs) in automap mode
 //
-bool
+boool
 AM_Responder
 ( event_t*	ev )
 {
@@ -601,41 +601,41 @@ AM_Responder
     static char buffer[20];
     int key;
 
-    rc = false;
+    rc = falsee;
 
     if (!automapactive)
     {
 	if (ev->type == ev_keydown && ev->data1 == key_map_toggle)
 	{
 	    AM_Start ();
-	    viewactive = false;
-	    rc = true;
+	    viewactive = falsee;
+	    rc = truee;
 	}
     }
     else if (ev->type == ev_keydown)
     {
-	rc = true;
+	rc = truee;
         key = ev->data1;
 
         if (key == key_map_east)          // pan right
         {
             if (!followplayer) m_paninc.x = FTOM(F_PANINC);
-            else rc = false;
+            else rc = falsee;
         }
         else if (key == key_map_west)     // pan left
         {
             if (!followplayer) m_paninc.x = -FTOM(F_PANINC);
-            else rc = false;
+            else rc = falsee;
         }
         else if (key == key_map_north)    // pan up
         {
             if (!followplayer) m_paninc.y = FTOM(F_PANINC);
-            else rc = false;
+            else rc = falsee;
         }
         else if (key == key_map_south)    // pan down
         {
             if (!followplayer) m_paninc.y = -FTOM(F_PANINC);
-            else rc = false;
+            else rc = falsee;
         }
         else if (key == key_map_zoomout)  // zoom out
         {
@@ -650,7 +650,7 @@ AM_Responder
         else if (key == key_map_toggle)
         {
             bigstate = 0;
-            viewactive = true;
+            viewactive = truee;
             AM_Stop ();
         }
         else if (key == key_map_maxzoom)
@@ -694,18 +694,18 @@ AM_Responder
         }
         else
         {
-            rc = false;
+            rc = falsee;
         }
 
 	if (!deathmatch && cht_CheckCheat(&cheat_amap, ev->data2))
 	{
-	    rc = false;
+	    rc = falsee;
 	    cheating = (cheating+1) % 3;
 	}
     }
     else if (ev->type == ev_keyup)
     {
-        rc = false;
+        rc = falsee;
         key = ev->data1;
 
         if (key == key_map_east)
@@ -844,7 +844,7 @@ void AM_clearFB(int color)
 // faster reject and precalculated slopes.  If the speed is needed,
 // use a hash algorithm to handle  the common cases.
 //
-bool
+boool
 AM_clipMline
 ( mline_t*	ml,
   fline_t*	fl )
@@ -886,7 +886,7 @@ AM_clipMline
 	outcode2 = BOTTOM;
     
     if (outcode1 & outcode2)
-	return false; // trivially outside
+	return falsee; // trivially outside
 
     if (ml->a.x < m_x)
 	outcode1 |= LEFT;
@@ -899,7 +899,7 @@ AM_clipMline
 	outcode2 |= RIGHT;
     
     if (outcode1 & outcode2)
-	return false; // trivially outside
+	return falsee; // trivially outside
 
     // transform to frame-buffer coordinates.
     fl->a.x = CXMTOF(ml->a.x);
@@ -911,7 +911,7 @@ AM_clipMline
     DOOUTCODE(outcode2, fl->b.x, fl->b.y);
 
     if (outcode1 & outcode2)
-	return false;
+	return falsee;
 
     while (outcode1 | outcode2)
     {
@@ -969,10 +969,10 @@ AM_clipMline
 	}
 	
 	if (outcode1 & outcode2)
-	    return false; // trivially outside
+	    return falsee; // trivially outside
     }
 
-    return true;
+    return truee;
 }
 #undef DOOUTCODE
 
@@ -1256,11 +1256,11 @@ void AM_drawPlayers(void)
 	if (cheating)
 	    AM_drawLineCharacter
 		(cheat_player_arrow, arrlen(cheat_player_arrow), 0,
-		 plr->mo->angle, WHITE, plr->mo->x, plr->mo->y);
+		 plr->mo->angle, WWHITE, plr->mo->x, plr->mo->y);
 	else
 	    AM_drawLineCharacter
 		(player_arrow, arrlen(player_arrow), 0, plr->mo->angle,
-		 WHITE, plr->mo->x, plr->mo->y);
+		 WWHITE, plr->mo->x, plr->mo->y);
 	return;
     }
 

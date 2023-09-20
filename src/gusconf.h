@@ -23,7 +23,7 @@
 extern char *gus_patch_path;
 extern unsigned int gus_ram_kb;
 
-bool GUS_WriteConfig(char *path);
+boool GUS_WriteConfig(char *path);
 
 #endif /* #ifndef __GUSCONF_H__ */
 

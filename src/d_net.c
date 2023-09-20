@@ -17,7 +17,7 @@
 //	all OS independend parts.
 //
 
-#include <stdlib.h>
+
 
 #include "doomfeatures.h"
 
@@ -57,7 +57,7 @@ static void PlayerQuitGame(player_t *player)
 
     exitmsg[7] += player_num;
 
-    playeringame[player_num] = false;
+    playeringame[player_num] = falsee;
     players[consoleplayer].message = exitmsg;
 
     // TODO: check if it is sensible to do this:
@@ -68,9 +68,9 @@ static void PlayerQuitGame(player_t *player)
     }
 }
 
-static void RunTic(ticcmd_t *cmds, bool *ingame)
+static void RunTic(ticcmd_t *cmds, boool *ingame)
 {
-    extern bool advancedemo;
+    extern boool advancedemo;
     unsigned int i;
 
     // Check for player quits.
@@ -159,7 +159,7 @@ static void SaveGameSettings(net_gamesettings_t *settings)
 static void InitConnectData(net_connect_data_t *connect_data)
 {
     connect_data->max_players = MAXPLAYERS;
-    connect_data->drone = false;
+    connect_data->drone = falsee;
 
     //!
     // @category net
@@ -170,7 +170,7 @@ static void InitConnectData(net_connect_data_t *connect_data)
     if (M_CheckParm("-left") > 0)
     {
         viewangleoffset = ANG90;
-        connect_data->drone = true;
+        connect_data->drone = truee;
     }
 
     //! 
@@ -182,7 +182,7 @@ static void InitConnectData(net_connect_data_t *connect_data)
     if (M_CheckParm("-right") > 0)
     {
         viewangleoffset = ANG270;
-        connect_data->drone = true;
+        connect_data->drone = truee;
     }
 
     //
@@ -229,7 +229,7 @@ void D_ConnectNetGame(void)
 
     if (M_CheckParm("-solo-net") > 0)
     {
-        netgame = true;
+        netgame = truee;
     }
 }
 
@@ -243,7 +243,7 @@ void D_CheckNetGame (void)
 
     if (netgame)
     {
-        autostart = true;
+        autostart = truee;
     }
 
     D_RegisterLoopCallbacks(&doom_loop_interface);

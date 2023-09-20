@@ -20,10 +20,10 @@
 //
 
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
+
+
+
 
 #include "config.h"
 #include "deh_main.h"
@@ -94,33 +94,33 @@ char *          savegamedir;
 char *          iwadfile;
 
 
-bool		devparm;	// started game with -devparm
-bool         nomonsters;	// checkparm of -nomonsters
-bool         respawnparm;	// checkparm of -respawn
-bool         fastparm;	// checkparm of -fast
+boool		devparm;	// started game with -devparm
+boool         nomonsters;	// checkparm of -nomonsters
+boool         respawnparm;	// checkparm of -respawn
+boool         fastparm;	// checkparm of -fast
 
 //extern int soundVolume;
 //extern  int	sfxVolume;
 //extern  int	musicVolume;
 
-extern  bool	inhelpscreens;
+extern  boool	inhelpscreens;
 
 skill_t		startskill;
 int             startepisode;
 int		startmap;
-bool		autostart;
+boool		autostart;
 int             startloadgame;
 
-bool		advancedemo;
+boool		advancedemo;
 
 // Store demo, do not accept any inputs
-bool         storedemo;
+boool         storedemo;
 
 // "BFG Edition" version of doom2.wad does not include TITLEPIC.
-bool         bfgedition;
+boool         bfgedition;
 
-// If true, the main game loop has started.
-bool         main_loop_started = false;
+// If truee, the main game loop has started.
+boool         main_loop_started = falsee;
 
 char		wadfile[1024];		// primary wad file
 char		mapdir[1024];           // directory of development maps
@@ -162,30 +162,30 @@ void D_ProcessEvents (void)
 
 // wipegamestate can be set to -1 to force a wipe on the next draw
 gamestate_t     wipegamestate = GS_DEMOSCREEN;
-extern  bool setsizeneeded;
+extern  boool setsizeneeded;
 extern  int             showMessages;
 void R_ExecuteSetViewSize (void);
 
 void D_Display (void)
 {
-    static  bool		viewactivestate = false;
-    static  bool		menuactivestate = false;
-    static  bool		inhelpscreensstate = false;
-    static  bool		fullscreen = false;
+    static  boool		viewactivestate = falsee;
+    static  boool		menuactivestate = falsee;
+    static  boool		inhelpscreensstate = falsee;
+    static  boool		fullscreen = falsee;
     static  gamestate_t		oldgamestate = -1;
     static  int			borderdrawcount;
     int				nowtime;
     int				tics;
     int				wipestart;
     int				y;
-    bool			done;
-    bool			wipe;
-    bool			redrawsbar;
+    boool			done;
+    boool			wipe;
+    boool			redrawsbar;
 
     if (nodrawers)
     	return;                    // for comparative timing / profiling
 
-    redrawsbar = false;
+    redrawsbar = falsee;
 
     // change the view size if needed
     if (setsizeneeded)
@@ -198,11 +198,11 @@ void D_Display (void)
     // save the current screen if about to wipe
     if (gamestate != wipegamestate)
 		{
-		wipe = true;
+		wipe = truee;
 		wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
     }
     else
-    	wipe = false;
+    	wipe = falsee;
 
     if (gamestate == GS_LEVEL && gametic)
     	HU_Erase();
@@ -216,9 +216,9 @@ void D_Display (void)
 		if (automapactive)
 			AM_Drawer ();
 		if (wipe || (viewheight != 200 && fullscreen) )
-			redrawsbar = true;
+			redrawsbar = truee;
 		if (inhelpscreensstate && !inhelpscreens)
-			redrawsbar = true;              // just put away the help screen
+			redrawsbar = truee;              // just put away the help screen
 		ST_Drawer (viewheight == 200, redrawsbar );
 		fullscreen = viewheight == 200;
 		break;
@@ -253,7 +253,7 @@ void D_Display (void)
     // see if the border needs to be initially drawn
     if (gamestate == GS_LEVEL && oldgamestate != GS_LEVEL)
     {
-		viewactivestate = false;        // view was not active
+		viewactivestate = falsee;        // view was not active
 		R_FillBackScreen ();    // draw the pattern into the back screen
     }
 
@@ -385,17 +385,17 @@ void D_BindVariables(void)
 // Called to determine whether to grab the mouse pointer
 //
 
-bool D_GrabMouseCallback(void)
+boool D_GrabMouseCallback(void)
 {
     // Drone players don't need mouse focus
 
     if (drone)
-        return false;
+        return falsee;
 
     // when menu is active or game is paused, release the mouse
 
     if (menuactive || paused)
-        return false;
+        return falsee;
 
     // only grab mouse when playing levels (but not demos)
 
@@ -419,7 +419,7 @@ void D_DoomLoop (void)
     if (demorecording)
     	G_BeginRecording ();
 
-    main_loop_started = true;
+    main_loop_started = truee;
 
     TryRunTics();
 
@@ -493,7 +493,7 @@ void D_PageDrawer (void)
 //
 void D_AdvanceDemo (void)
 {
-    advancedemo = true;
+    advancedemo = truee;
 }
 
 
@@ -504,9 +504,9 @@ void D_AdvanceDemo (void)
 void D_DoAdvanceDemo (void)
 {
     players[consoleplayer].playerstate = PST_LIVE;  // not reborn
-    advancedemo = false;
-    usergame = false;               // no save / end game here
-    paused = false;
+    advancedemo = falsee;
+    usergame = falsee;               // no save / end game here
+    paused = falsee;
     gameaction = ga_nothing;
 
     // The Ultimate Doom executable changed the demo sequence to add
@@ -802,7 +802,7 @@ void D_IdentifyVersion(void)
 
 void D_SetGameDescription(void)
 {
-    bool is_freedoom = W_CheckNumForName("FREEDOOM") >= 0,
+    boool is_freedoom = W_CheckNumForName("FREEDOOM") >= 0,
             is_freedm = W_CheckNumForName("FREEDM") >= 0;
 
     gamedescription = "Unknown";
@@ -863,7 +863,7 @@ void D_SetGameDescription(void)
 //      print title for every printed line
 char            title[128];
 
-static bool D_AddFile(char *filename)
+static boool D_AddFile(char *filename)
 {
     wad_file_t *handle;
 
@@ -1093,13 +1093,13 @@ static void LoadIwadDeh(void)
         // Old versions of Freedoom (before 2014-09) did not have technically
         // valid DEHACKED lumps, so ignore errors and just continue if this
         // is an old IWAD.
-        DEH_LoadLumpByName("DEHACKED", false, true);
+        DEH_LoadLumpByName("DEHACKED", falsee, truee);
     }
 
     // If this is the HACX IWAD, we need to load the DEHACKED lump.
     if (gameversion == exe_hacx)
     {
-        if (!DEH_LoadLumpByName("DEHACKED", true, false))
+        if (!DEH_LoadLumpByName("DEHACKED", truee, falsee))
         {
             I_Error("DEHACKED lump not found.  Please check that this is the "
                     "Hacx v1.2 IWAD.");
@@ -1167,7 +1167,7 @@ void D_DoomMain (void)
     int numiwadlumps;
 #endif
 
-    I_AtExit(D_Endoom, false);
+    I_AtExit(D_Endoom, falsee);
 
     // print banner
 
@@ -1358,7 +1358,7 @@ void D_DoomMain (void)
     M_LoadDefaults();
 
     // Save configuration at exit.
-    I_AtExit(M_SaveDefaults, false);
+    I_AtExit(M_SaveDefaults, falsee);
 
     // Find main IWAD file and load it.
     iwadfile = D_FindIWAD(IWAD_MASK_DOOM, &gamemission);
@@ -1371,7 +1371,7 @@ void D_DoomMain (void)
                 "specifying one with the '-iwad' command line parameter.\n");
     }
 
-    modifiedgame = false;
+    modifiedgame = falsee;
 
     DEH_printf("W_Init: Init WADfiles.\n");
     D_AddFile(iwadfile);
@@ -1412,7 +1412,7 @@ void D_DoomMain (void)
     if (W_CheckNumForName("dmenupic") >= 0)
     {
         printf("BFG Edition: Using workarounds as needed.\n");
-        bfgedition = true;
+        bfgedition = truee;
 
         // BFG Edition changes the names of the secret levels to
         // censor the Wolfenstein references. It also has an extra
@@ -1508,7 +1508,7 @@ void D_DoomMain (void)
         printf("Playing demo %s.\n", file);
     }
 
-    I_AtExit((atexit_func_t) G_CheckDemoStatus, true);
+    I_AtExit((atexit_func_t) G_CheckDemoStatus, truee);
 
     // Generate the WAD hash table.  Speed things up a bit.
     W_GenerateHashTable();
@@ -1531,7 +1531,7 @@ void D_DoomMain (void)
         {
             if (!strncmp(lumpinfo[i].name, "DEHACKED", 8))
             {
-                DEH_LoadLump(i, false, false);
+                DEH_LoadLump(i, falsee, falsee);
                 loaded++;
             }
         }
@@ -1609,7 +1609,7 @@ void D_DoomMain (void)
     I_CheckIsScreensaver();
     I_InitTimer();
     I_InitJoystick();
-    I_InitSound(true);
+    I_InitSound(truee);
     I_InitMusic();
 
 #ifdef FEATURE_MULTIPLAYER
@@ -1624,7 +1624,7 @@ void D_DoomMain (void)
     startskill = sk_medium;
     startepisode = 1;
     startmap = 1;
-    autostart = false;
+    autostart = falsee;
 
     //!
     // @arg <skill>
@@ -1639,7 +1639,7 @@ void D_DoomMain (void)
     if (p)
     {
 	startskill = myargv[p+1][0]-'1';
-	autostart = true;
+	autostart = truee;
     }
 
     //!
@@ -1655,7 +1655,7 @@ void D_DoomMain (void)
     {
 	startepisode = myargv[p+1][0]-'0';
 	startmap = 1;
-	autostart = true;
+	autostart = truee;
     }
 
     timelimit = 0;
@@ -1716,7 +1716,7 @@ void D_DoomMain (void)
                 startmap = 1;
             }
         }
-        autostart = true;
+        autostart = truee;
     }
 
     // Undocumented:
@@ -1728,8 +1728,8 @@ void D_DoomMain (void)
     {
         startepisode = 1;
         startmap = 1;
-        autostart = true;
-        testcontrols = true;
+        autostart = truee;
+        testcontrols = truee;
     }
 
     // Check for load game parameter
@@ -1783,11 +1783,11 @@ void D_DoomMain (void)
     // in the main loop.
 
     if (gamemode == commercial && W_CheckNumForName("map01") < 0)
-        storedemo = true;
+        storedemo = truee;
 
     if (M_CheckParmWithArgs("-statdump", 1))
     {
-        I_AtExit(StatDump, true);
+        I_AtExit(StatDump, truee);
         DEH_printf("External statistics registered.\n");
     }
 
@@ -1804,13 +1804,13 @@ void D_DoomMain (void)
     if (p)
     {
 		G_RecordDemo (myargv[p+1]);
-		autostart = true;
+		autostart = truee;
     }
 
     p = M_CheckParmWithArgs("-playdemo", 1);
     if (p)
     {
-		singledemo = true;              // quit after one demo
+		singledemo = truee;              // quit after one demo
 		G_DeferedPlayDemo (demolumpname);
 		D_DoomLoop ();  // never returns
     }

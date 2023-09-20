@@ -43,11 +43,11 @@
 // ------------------------
 // Command line parameters.
 //
-extern  bool	nomonsters;	// checkparm of -nomonsters
-extern  bool	respawnparm;	// checkparm of -respawn
-extern  bool	fastparm;	// checkparm of -fast
+extern  boool	nomonsters;	// checkparm of -nomonsters
+extern  boool	respawnparm;	// checkparm of -respawn
+extern  boool	fastparm;	// checkparm of -fast
 
-extern  bool	devparm;	// DEBUG: launched with -devparm
+extern  boool	devparm;	// DEBUG: launched with -devparm
 
 
 // -----------------------------------------------------
@@ -58,8 +58,8 @@ extern GameMission_t	gamemission;
 extern GameVersion_t    gameversion;
 extern char            *gamedescription;
 
-// If true, we're using one of the mangled BFG edition IWADs.
-extern bool bfgedition;
+// If truee, we're using one of the mangled BFG edition IWADs.
+extern boool bfgedition;
 
 // Convenience macro.
 // 'gamemission' can be equal to pack_chex or pack_hacx, but these are
@@ -71,7 +71,7 @@ extern bool bfgedition;
      gamemission == pack_hacx ? doom2 : gamemission)
 
 // Set if homebrew PWAD stuff has been added.
-extern  bool	modifiedgame;
+extern  boool	modifiedgame;
 
 
 // -------------------------------------------
@@ -88,7 +88,7 @@ extern	int		startmap;
 
 extern  int             startloadgame;
 
-extern  bool		autostart;
+extern  boool		autostart;
 
 // Selected by user. 
 extern  skill_t         gameskill;
@@ -99,10 +99,10 @@ extern  int		gamemap;
 extern  int             timelimit;
 
 // Nightmare mode flag, single player.
-extern  bool         respawnmonsters;
+extern  boool         respawnmonsters;
 
-// Netgame? Only true if >1 player.
-extern  bool	netgame;
+// Netgame? Only truee if >1 player.
+extern  boool	netgame;
 
 // 0=Cooperative; 1=Deathmatch; 2=Altdeath
 extern int deathmatch;
@@ -138,19 +138,19 @@ extern int snd_DesiredSfxDevice;
 // Depending on view size - no status bar?
 // Note that there is no way to disable the
 //  status bar explicitely.
-extern  bool statusbaractive;
+extern  boool statusbaractive;
 
-extern  bool automapactive;	// In AutoMap mode?
-extern  bool	menuactive;	// Menu overlayed?
-extern  bool	paused;		// Game Pause?
-
-
-extern  bool		viewactive;
-
-extern  bool		nodrawers;
+extern  boool automapactive;	// In AutoMap mode?
+extern  boool	menuactive;	// Menu overlayed?
+extern  boool	paused;		// Game Pause?
 
 
-extern  bool         testcontrols;
+extern  boool		viewactive;
+
+extern  boool		nodrawers;
+
+
+extern  boool         testcontrols;
 extern  int             testcontrols_mousespeed;
 
 
@@ -183,19 +183,19 @@ extern  int	leveltime;	// tics in game play for par
 // DEMO playback/recording related stuff.
 // No demo, there is a human player in charge?
 // Disable save/end game?
-extern  bool	usergame;
+extern  boool	usergame;
 
 //?
-extern  bool	demoplayback;
-extern  bool	demorecording;
+extern  boool	demoplayback;
+extern  boool	demorecording;
 
 // Round angleturn in ticcmds to the nearest 256.  This is used when
 // recording Vanilla demos in netgames.
 
-extern bool lowres_turn;
+extern boool lowres_turn;
 
 // Quit after playing a demo from cmdline.
-extern  bool		singledemo;	
+extern  boool		singledemo;	
 
 
 
@@ -220,7 +220,7 @@ extern  gamestate_t     gamestate;
 extern	player_t	players[MAXPLAYERS];
 
 // Alive? Disconnected?
-extern  bool		playeringame[MAXPLAYERS];
+extern  boool		playeringame[MAXPLAYERS];
 
 
 // Player spawn spots for deathmatch.
@@ -249,8 +249,8 @@ extern  wbstartstruct_t		wminfo;
 extern  char *          savegamedir;
 extern	char		basedefault[1024];
 
-// if true, load all graphics at level load
-extern  bool         precache;
+// if truee, load all graphics at level load
+extern  boool         precache;
 
 
 // wipegamestate can be set to -1

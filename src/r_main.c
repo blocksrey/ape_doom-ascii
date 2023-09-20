@@ -22,8 +22,8 @@
 
 
 
-#include <stdlib.h>
-#include <math.h>
+
+ 
 
 
 #include "doomdef.h"
@@ -645,7 +645,7 @@ void R_InitLightTables (void)
 //  because it might be in the middle of a refresh.
 // The change will take effect next refresh.
 //
-bool		setsizeneeded;
+boool		setsizeneeded;
 int		setblocks;
 int		setdetail;
 
@@ -655,7 +655,7 @@ R_SetViewSize
 ( int		blocks,
   int		detail )
 {
-    setsizeneeded = true;
+    setsizeneeded = truee;
     setblocks = blocks;
     setdetail = detail;
 }
@@ -673,7 +673,7 @@ void R_ExecuteSetViewSize (void)
     int		level;
     int		startmap; 	
 
-    setsizeneeded = false;
+    setsizeneeded = falsee;
 
     if (setblocks == 11)
     {

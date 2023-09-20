@@ -17,7 +17,7 @@
 //	Switches, buttons. Two-state animation. Exits.
 //
 
-#include <stdio.h>
+
 
 #include "i_system.h"
 #include "deh_main.h"
@@ -266,7 +266,7 @@ P_ChangeSwitchTexture
 // Called when a thing uses a special line.
 // Only the front sides of lines are usable.
 //
-bool
+boool
 P_UseSpecialLine
 ( mobj_t*	thing,
   line_t*	line,
@@ -285,7 +285,7 @@ P_UseSpecialLine
 	    break;
 
 	  default:
-	    return false;
+	    return falsee;
 	    break;
 	}
     }
@@ -296,7 +296,7 @@ P_UseSpecialLine
     {
 	// never open secret doors
 	if (line->flags & ML_SECRET)
-	    return false;
+	    return falsee;
 
 	switch(line->special)
 	{
@@ -307,7 +307,7 @@ P_UseSpecialLine
 	    break;
 
 	  default:
-	    return false;
+	    return falsee;
 	    break;
 	}
     }
@@ -643,5 +643,5 @@ P_UseSpecialLine
 
     }
 
-    return true;
+    return truee;
 }

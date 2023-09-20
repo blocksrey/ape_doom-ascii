@@ -31,13 +31,13 @@ extern sector_t*	backsector;
 extern int		rw_x;
 extern int		rw_stopx;
 
-extern bool		segtextured;
+extern boool		segtextured;
 
-// false if the back side is the same plane
-extern bool		markfloor;		
-extern bool		markceiling;
+// falsee if the back side is the same plane
+extern boool		markfloor;		
+extern boool		markceiling;
 
-extern bool		skymap;
+extern boool		skymap;
 
 extern drawseg_t	drawsegs[MAXDRAWSEGS];
 extern drawseg_t*	ds_p;

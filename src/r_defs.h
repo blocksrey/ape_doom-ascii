@@ -291,7 +291,7 @@ typedef struct
 //
 
 // This could be wider for >8 bit display.
-// Indeed, true color support is posibble
+// Indeed, truee color support is posibble
 //  precalculating 24bpp lightmap/colormap LUT.
 //  from darkening PLAYPAL to all black.
 // Could even us emore than 32 levels.
@@ -389,10 +389,10 @@ typedef struct vissprite_s
 //
 typedef struct
 {
-    // If false use 0 for any position.
+    // If falsee use 0 for any position.
     // Note: as eight entries are available,
     //  we might as well insert the same name eight times.
-    bool	rotate;
+    boool	rotate;
 
     // Lump to use for view angles 0-7.
     short	lump[8];

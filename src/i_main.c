@@ -16,13 +16,11 @@
 //	Main program, simply calls D_DoomMain high level loop.
 //
 
-//#include "config.h"
 
-#include <stdio.h>
 
-//#include "doomtype.h"
-//#include "i_system.h"
+
 #include "m_argv.h"
+#include "os.h"
 
 //
 // D_DoomMain()
@@ -39,20 +37,22 @@ void dg_Create();
 
 int main(int argc, char **argv)
 {
-    // save arguments
+	check_os();
 
-    myargc = argc;
-    myargv = argv;
+	// save arguments
 
-    M_FindResponseFile();
+	myargc = argc;
+	myargv = argv;
 
-    // start doom
-    printf("Starting D_DoomMain\r\n");
-    
+	M_FindResponseFile();
+
+	// start doom
+	printf("Starting D_DoomMain\r\n");
+
 	dg_Create();
 
 	D_DoomMain ();
 
-    return 0;
+	return 0;
 }
 

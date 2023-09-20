@@ -15,8 +15,8 @@
 // DESCRIPTION:  none
 //
 
-#include <stdio.h>
-#include <stdlib.h>
+
+
 
 #include "i_sound.h"
 #include "i_system.h"
@@ -95,7 +95,7 @@ static int snd_SfxVolume;
 
 // Whether songs are mus_paused
 
-static bool mus_paused;        
+static boool mus_paused;        
 
 // Music currently being played
 
@@ -140,7 +140,7 @@ void S_Init(int sfxVolume, int musicVolume)
         S_sfx[i].lumpnum = S_sfx[i].usefulness = -1;
     }
 
-    I_AtExit(S_Shutdown, true);
+    I_AtExit(S_Shutdown, truee);
 }
 
 void S_Shutdown(void)
@@ -237,7 +237,7 @@ void S_Start(void)
         }
     }        
 
-    S_ChangeMusic(mnum, true);
+    S_ChangeMusic(mnum, truee);
 }        
 
 void S_StopSound(mobj_t *origin)
@@ -484,7 +484,7 @@ void S_PauseSound(void)
     if (mus_playing && !mus_paused)
     {
         I_PauseSong();
-        mus_paused = true;
+        mus_paused = truee;
     }
 }
 
@@ -493,7 +493,7 @@ void S_ResumeSound(void)
     if (mus_playing && mus_paused)
     {
         I_ResumeSong();
-        mus_paused = false;
+        mus_paused = falsee;
     }
 }
 
@@ -595,7 +595,7 @@ void S_SetSfxVolume(int volume)
 
 void S_StartMusic(int m_id)
 {
-    S_ChangeMusic(m_id, false);
+    S_ChangeMusic(m_id, falsee);
 }
 
 void S_ChangeMusic(int musicnum, int looping)
@@ -646,7 +646,7 @@ void S_ChangeMusic(int musicnum, int looping)
     mus_playing = music;
 }
 
-bool S_MusicPlaying(void)
+boool S_MusicPlaying(void)
 {
     return I_MusicIsPlaying();
 }

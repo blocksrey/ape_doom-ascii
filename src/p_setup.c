@@ -19,7 +19,7 @@
 
 
 
-#include <math.h>
+ 
 
 #include "z_zone.h"
 
@@ -152,7 +152,7 @@ void P_LoadVertexes (int lump)
 //
 sector_t* GetSectorAtNullAddress(void)
 {
-    static bool null_sector_is_initialized = false;
+    static boool null_sector_is_initialized = falsee;
     static sector_t null_sector;
 
     if (!null_sector_is_initialized)
@@ -160,7 +160,7 @@ sector_t* GetSectorAtNullAddress(void)
         memset(&null_sector, 0, sizeof(null_sector));
         I_GetMemoryValue(0, &null_sector.floorheight, 4);
         I_GetMemoryValue(4, &null_sector.ceilingheight, 4);
-        null_sector_is_initialized = true;
+        null_sector_is_initialized = truee;
     }
 
     return &null_sector;
@@ -339,7 +339,7 @@ void P_LoadThings (int lump)
     mapthing_t         *mt;
     mapthing_t          spawnthing;
     int			numthings;
-    bool		spawn;
+    boool		spawn;
 
     data = W_CacheLumpNum (lump,PU_STATIC);
     numthings = W_LumpLength (lump) / sizeof(mapthing_t);
@@ -347,7 +347,7 @@ void P_LoadThings (int lump)
     mt = (mapthing_t *)data;
     for (i=0 ; i<numthings ; i++, mt++)
     {
-	spawn = true;
+	spawn = truee;
 
 	// Do not spawn cool, new monsters if !commercial
 	if (gamemode != commercial)
@@ -364,11 +364,11 @@ void P_LoadThings (int lump)
 	      case 65:	// Former Human Commando
 	      case 66:	// Revenant
 	      case 84:	// Wolf SS
-		spawn = false;
+		spawn = falsee;
 		break;
 	    }
 	}
-	if (spawn == false)
+	if (spawn == falsee)
 	    break;
 
 	// Do spawn all other stuff.

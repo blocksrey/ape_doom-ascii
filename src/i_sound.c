@@ -15,8 +15,8 @@
 // DESCRIPTION:  none
 //
 
-#include <stdio.h>
-#include <stdlib.h>
+
+
 
 #ifdef ORIGCODE
 #include "SDL_mixer.h"
@@ -111,7 +111,7 @@ static music_module_t *music_modules[] =
 
 // Check if a sound device is in the given list of devices
 
-static bool SndDeviceInList(snddevice_t device, snddevice_t *list,
+static boool SndDeviceInList(snddevice_t device, snddevice_t *list,
                                int len)
 {
     int i;
@@ -120,17 +120,17 @@ static bool SndDeviceInList(snddevice_t device, snddevice_t *list,
     {
         if (device == list[i])
         {
-            return true;
+            return truee;
         }
     }
 
-    return false;
+    return falsee;
 }
 
 // Find and initialize a sound_module_t appropriate for the setting
 // in snd_sfxdevice.
 
-static void InitSfxModule(bool use_sfx_prefix)
+static void InitSfxModule(boool use_sfx_prefix)
 {
     int i;
 
@@ -190,9 +190,9 @@ static void InitMusicModule(void)
 //  allocates channel buffer, sets S_sfx lookup.
 //
 
-void I_InitSound(bool use_sfx_prefix)
+void I_InitSound(boool use_sfx_prefix)
 {  
-    bool nosound, nosfx, nomusic;
+    boool nosound, nosfx, nomusic;
 
     //!
     // @vanilla
@@ -334,7 +334,7 @@ void I_StopSound(int channel)
     }
 }
 
-bool I_SoundIsPlaying(int channel)
+boool I_SoundIsPlaying(int channel)
 {
     if (sound_module != NULL)
     {
@@ -342,7 +342,7 @@ bool I_SoundIsPlaying(int channel)
     }
     else
     {
-        return false;
+        return falsee;
     }
 }
 
@@ -407,7 +407,7 @@ void I_UnRegisterSong(void *handle)
     }
 }
 
-void I_PlaySong(void *handle, bool looping)
+void I_PlaySong(void *handle, boool looping)
 {
     if (music_module != NULL)
     {
@@ -423,7 +423,7 @@ void I_StopSong(void)
     }
 }
 
-bool I_MusicIsPlaying(void)
+boool I_MusicIsPlaying(void)
 {
     if (music_module != NULL)
     {
@@ -431,7 +431,7 @@ bool I_MusicIsPlaying(void)
     }
     else
     {
-        return false;
+        return falsee;
     }
 }
 

@@ -18,7 +18,7 @@
 #ifndef NET_DEFS_H
 #define NET_DEFS_H 
 
-#include <stdio.h>
+
 
 #include "doomtype.h"
 #include "d_ticcmd.h"
@@ -61,11 +61,11 @@ struct _net_module_s
 {
     // Initialize this module for use as a client
 
-    bool (*InitClient)(void);
+    boool (*InitClient)(void);
 
     // Initialize this module for use as a server
 
-    bool (*InitServer)(void);
+    boool (*InitServer)(void);
 
     // Send a packet
 
@@ -73,9 +73,9 @@ struct _net_module_s
 
     // Check for new packets to receive
     //
-    // Returns true if packet received
+    // Returns truee if packet received
 
-    bool (*RecvPacket)(net_addr_t **addr, net_packet_t **packet);
+    boool (*RecvPacket)(net_addr_t **addr, net_packet_t **packet);
 
     // Converts an address to a string
 
@@ -211,7 +211,7 @@ typedef struct
 {
     signed int latency;
     unsigned int seq;
-    bool playeringame[NET_MAXPLAYERS];
+    boool playeringame[NET_MAXPLAYERS];
     net_ticdiff_t cmds[NET_MAXPLAYERS];
 } net_full_ticcmd_t;
 

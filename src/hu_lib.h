@@ -59,9 +59,9 @@ typedef struct
     int			h;		// height in lines
     int			cl;		// current line number
 
-    // pointer to bool stating whether to update window
-    bool*		on;
-    bool		laston;		// last value of *->on.
+    // pointer to boool stating whether to update window
+    boool*		on;
+    boool		laston;		// last value of *->on.
 
 } hu_stext_t;
 
@@ -76,9 +76,9 @@ typedef struct
      // left margin past which I am not to delete characters
     int			lm;
 
-    // pointer to bool stating whether to update window
-    bool*		on; 
-    bool		laston; // last value of *->on;
+    // pointer to boool stating whether to update window
+    boool*		on; 
+    boool		laston; // last value of *->on;
 
 } hu_itext_t;
 
@@ -100,13 +100,13 @@ void	HUlib_clearTextLine(hu_textline_t *t);
 void	HUlib_initTextLine(hu_textline_t *t, int x, int y, patch_t **f, int sc);
 
 // returns success
-bool HUlib_addCharToTextLine(hu_textline_t *t, char ch);
+boool HUlib_addCharToTextLine(hu_textline_t *t, char ch);
 
 // returns success
-bool HUlib_delCharFromTextLine(hu_textline_t *t);
+boool HUlib_delCharFromTextLine(hu_textline_t *t);
 
 // draws tline
-void	HUlib_drawTextLine(hu_textline_t *l, bool drawcursor);
+void	HUlib_drawTextLine(hu_textline_t *l, boool drawcursor);
 
 // erases text line
 void	HUlib_eraseTextLine(hu_textline_t *l); 
@@ -125,7 +125,7 @@ HUlib_initSText
   int		h,
   patch_t**	font,
   int		startchar,
-  bool*	on );
+  boool*	on );
 
 // add a new line
 void HUlib_addLineToSText(hu_stext_t* s);  
@@ -151,7 +151,7 @@ HUlib_initIText
   int		y,
   patch_t**	font,
   int		startchar,
-  bool*	on );
+  boool*	on );
 
 // enforces left margin
 void HUlib_delCharFromIText(hu_itext_t* it);
@@ -169,7 +169,7 @@ HUlib_addPrefixToIText
   char*		str );
 
 // whether eaten
-bool
+boool
 HUlib_keyInIText
 ( hu_itext_t*	it,
   unsigned char ch );

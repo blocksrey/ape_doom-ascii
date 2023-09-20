@@ -1,8 +1,8 @@
 #ifndef DOOM_GENERIC
 #define DOOM_GENERIC
 
-#include <stdlib.h>
-#include <stdint.h>
+
+ 
 
 extern unsigned DOOMGENERIC_RESX;
 extern unsigned DOOMGENERIC_RESY;

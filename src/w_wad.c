@@ -19,10 +19,10 @@
 
 
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
+
+
+
 
 #include "doomtype.h"
 
@@ -193,7 +193,7 @@ wad_file_t *W_AddFile (char *filename)
 				 "or PWAD id\n", filename);
 			}
 
-			// ???modifiedgame = true;
+			// ???modifiedgame = truee;
 		}
 
 		header.numlumps = LONG(header.numlumps);

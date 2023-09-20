@@ -16,7 +16,7 @@
 //	WAD I/O functions.
 //
 
-#include <stdio.h>
+
 
 #include "config.h"
 
@@ -27,59 +27,13 @@
 
 extern wad_file_class_t stdc_wad_file;
 
-/*
-#ifdef _WIN32
-extern wad_file_class_t win32_wad_file;
-#endif
-*/
-
-#ifdef HAVE_MMAP
-extern wad_file_class_t posix_wad_file;
-#endif 
-
-static wad_file_class_t *wad_file_classes[] = 
-{
-/*
-#ifdef _WIN32
-    &win32_wad_file,
-#endif
-*/
-#ifdef HAVE_MMAP
-    &posix_wad_file,
-#endif
-    &stdc_wad_file,
-};
-
 wad_file_t *W_OpenFile(char *path)
 {
-    wad_file_t *result;
-    int i;
-
     //!
     // Use the OS's virtual memory subsystem to map WAD files
     // directly into memory.
     //
-
-    if (!M_CheckParm("-mmap"))
-    {
-        return stdc_wad_file.OpenFile(path);
-    }
-
-    // Try all classes in order until we find one that works
-
-    result = NULL;
-
-    for (i = 0; i < arrlen(wad_file_classes); ++i)
-    {
-        result = wad_file_classes[i]->OpenFile(path);
-
-        if (result != NULL)
-        {
-            break;
-        }
-    }
-
-    return result;
+    return stdc_wad_file.OpenFile(path);
 }
 
 void W_CloseFile(wad_file_t *wad)

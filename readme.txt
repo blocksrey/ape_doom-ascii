@@ -8,24 +8,6 @@ Source-port of [doomgeneric](https://github.com/ozkl/doomgeneric). Does not have
 
 You will need a WAD file (game data). If you don't own the game, the shareware version is freely available.
 
-## Build
-
-Binaries for Windows and Linux are provided as github releases.
-
-### Linux
-Creates ```doom_ascii/doom_ascii```
-```
-cd src
-make
-```
-
-### Windows
-Compile on linux. Creates ```doom_ascii/doom_ascii.exe```
-```
-cd src
-make windows
-```
-
 ## Controls
 
 Default keybindings are listed below.
